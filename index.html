@@ -657,6 +657,72 @@ nav { padding: 12px 0; flex: 1; }
   margin: 0;
 }
 
+/* ── KEY FINDINGS ───────────────────────────────────────── */
+.kf-section {
+  padding: 36px var(--content-pad) 40px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--cobalt-ll);
+}
+.kf-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cobalt);
+  margin-bottom: 18px;
+}
+.kf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.kf-card {
+  background: var(--bg);
+  border: 1.5px solid var(--rule);
+  border-radius: 8px;
+  padding: 18px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: box-shadow 0.15s;
+}
+.kf-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.kf-num {
+  min-width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--cobalt-l);
+  color: var(--cobalt);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.kf-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+.kf-desc {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+@media (max-width: 860px) {
+  .kf-grid { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .kf-section { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .kf-card { break-inside: avoid; }
+}
+
 /* ── PRINT ──────────────────────────────────────────────── */
 .print-btn {
   position: fixed;
@@ -676,6 +742,9 @@ nav { padding: 12px 0; flex: 1; }
 }
 .print-btn:hover { background: var(--cobalt-d); }
 
+/* Print-only content: hidden on screen, visible in print/PDF */
+.print-only { display: none; }
+
 @media print {
   #sidebar,.print-btn { display: none !important; }
   #main { margin-left: 0 !important; }
@@ -683,6 +752,8 @@ nav { padding: 12px 0; flex: 1; }
   .priority-chevron { display: none; }
   #cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   #report-footer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .print-only { display: block !important; }
+  .figure-hint { display: none !important; }
 }
 
 @media (max-width: 860px) {
@@ -705,6 +776,8 @@ nav { padding: 12px 0; flex: 1; }
     <div class="sidebar-meta">Breathe for Change · May 26, 2026</div>
   </div>
   <nav>
+    <a class="nav-item" href="#keyfindings">Key Findings</a>
+    <div class="nav-divider"></div>
     <a class="nav-item" href="#about">01 &nbsp; About This Report</a>
     <a class="nav-item active" href="#model">02 &nbsp; Impact Process Model</a>
     <div class="nav-divider"></div>
@@ -739,6 +812,41 @@ nav { padding: 12px 0; flex: 1; }
       <div class="cover-meta-item">
         <div class="cover-meta-label">Date</div>
         <div class="cover-meta-value">May 26, 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY FINDINGS -->
+  <div class="kf-section" id="keyfindings">
+    <div class="kf-label">Key Findings</div>
+    <div class="kf-grid">
+      <div class="kf-card">
+        <div class="kf-num">1</div>
+        <div>
+          <div class="kf-title">The core mechanism is defined but not yet formalized.</div>
+          <div class="kf-desc">BFC's model rests on how engagement develops the five Human Intelligences and translates into improved teaching. It is theoretically grounded in faculty expertise but has not been written as a formal theory of change, which makes it the most important and least-specified link in the chain.</div>
+        </div>
+      </div>
+      <div class="kf-card">
+        <div class="kf-num">2</div>
+        <div>
+          <div class="kf-title">The strongest evidence describes a different product.</div>
+          <div class="kf-desc">Nearly all of BFC's rigorous evidence — the ESSA Level II/III studies, the COVID-era pre/post data — was generated for its short-form training programs, not the M.S.Ed. As BFC shifts fully to higher education, its most credible evidence describes a product it is moving away from.</div>
+        </div>
+      </div>
+      <div class="kf-card">
+        <div class="kf-num">3</div>
+        <div>
+          <div class="kf-title">The richest M.S.Ed.-specific asset is sitting unused.</div>
+          <div class="kf-desc">The 600+ capstone action research projects are the most promising existing data source about the M.S.Ed. itself, but they have never been systematically analyzed. Synthesizing them is a near-term opportunity to build product-specific evidence without a new study.</div>
+        </div>
+      </div>
+      <div class="kf-card">
+        <div class="kf-num">4</div>
+        <div>
+          <div class="kf-title">Two tracks, run in parallel, on different timescales.</div>
+          <div class="kf-desc">The measurement work splits cleanly: use existing instruments now to build a defensible near-term evidence base (Track 1), while developing validated measures of the five Human Intelligences as a longer-term scientific investment and differentiator (Track 2). Track 2 begins now because psychometric development is slow.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -1045,6 +1153,7 @@ nav { padding: 12px 0; flex: 1; }
       </div>
     </div><!-- /view-meas -->
 
+    <div class="print-only">
     <h3 class="sub-header">Model Description</h3>
     <div class="sub-rule"></div>
     <table class="model-table">
@@ -1059,6 +1168,7 @@ nav { padding: 12px 0; flex: 1; }
         <tr><td>Intended Outcome</td><td>Educator personal and professional flourishing: reduced burnout, restored purpose, improved pedagogical practice, and career advancement. Student outcomes are downstream effects, not the primary marketed outcome.</td></tr>
       </tbody>
     </table>
+    </div>
   </section>
 
   <!-- 03 EVIDENCE LANDSCAPE -->
@@ -1354,6 +1464,7 @@ function toggleCard(id) {
 
 // ── SCROLL SPY ────────────────────────────────────────────────────────────
 const navMap = {
+  keyfindings:   'a[href="#keyfindings"]',
   about:         'a[href="#about"]',
   model:         'a[href="#model"]',
   evidence:      'a[href="#evidence"]',
