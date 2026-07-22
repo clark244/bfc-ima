@@ -26,7 +26,7 @@ clone the file and **rewrite the content regions** while leaving the **chrome** 
 |---|---|
 | `index.html` | The report. Markup + JS + SVG. **Canonical template.** |
 | `styles.css` | All CSS. Chrome — do not edit per client. |
-| `<Client>_<Doc>_<Month><Year>.pdf` | PDF export of the **final Google Doc** version. Served by the Download PDF button. |
+| *(no PDF file)* | The Doc's PDF is embedded **inside** `index.html` as base64 — not a separate repo file. |
 | `bundle.py` | Inlines CSS into a single portable HTML in `dist/` (for email). |
 | `GENERATION.md` | This guide. |
 | `.gitignore` | Ignores `dist/`. |
@@ -41,9 +41,9 @@ HTML. The sequence is:
 1. **Draft the Google Doc version** of the report (the Word/GDoc deliverable).
 2. **Clark reviews and edits** the Doc until it is final.
 3. **Generate the HTML report** from the finalized Doc's content (this guide).
-4. **Export the final Google Doc to PDF** (File → Download → PDF) and commit that PDF into
-   this repo next to `index.html`.
-5. Point `PDF_FILE` in `index.html` at that filename (see "The Download PDF button").
+4. **Export the final Google Doc to PDF**, base64-encode it, and embed it in `index.html`
+   as `PDF_B64` (see "The Download PDF button"). This is a scripted step, not a manual one.
+5. Update `PDF_NAME` to the filename the client should receive on download.
 6. Post to GitHub; share the Word/PDF plus the GitHub Pages link.
 
 Because the HTML and the PDF are two independent renderings of the same report, **build the
@@ -54,8 +54,10 @@ re-commit it — the HTML will not update itself, and vice versa.
 
 ## How to generate a new report
 
-1. Copy `index.html` → `dist/<client>.html` **and** copy `styles.css` alongside it (keep the
-   originals as the template). The copied HTML still links `styles.css` by relative path.
+1. Get the template with `git clone https://github.com/clark244/bfc-ima.git` — **not** a raw
+   URL fetch, which truncates around 80KB and silently loses the `<script>` block. Copy
+   `index.html` → `dist/<client>.html` and `styles.css` alongside it (keep the originals as the
+   template). The copied HTML still links `styles.css` by relative path.
 2. Feed an LLM: (a) the source material for the new client — discovery notes, questionnaire,
    public info; (b) this guide; (c) the filled BFC file as the example.
 3. Instruct it to rewrite **only** the content regions listed below, preserving the chrome
@@ -77,8 +79,8 @@ python3 bundle.py dist/<client>.html   # custom output path
 
 `bundle.py` needs only system Python 3. It reads `index.html` + `styles.css`, inlines the CSS
 into a `<style>` block, and writes the bundle to `dist/` (gitignored). It never modifies the
-source files. Note: a bundled file has no sibling PDF, so its Download PDF button falls back
-to the print dialog — attach the PDF separately when emailing.
+source files. Because the PDF is embedded in `index.html` rather than sitting beside it, the
+bundled file keeps a working Download PDF button — nothing extra to attach.
 
 ---
 
@@ -125,26 +127,43 @@ in doubt, cut toward the low end — this is an executive brief.
 | 9 | Priority cards | `class="priority-card"` | body **170–230** (intro **90–140** + a 4-item list + one italic note **25–40**) | The detailed payload. BFC has 6 (1a–1d, 2a–2b). |
 | 10 | Next Steps | `next-steps-list` | **6–7 steps, 25–45 each** | |
 | 11 | Nav labels | `<nav>` in `id="sidebar"` | labels only | Must **mirror** the section titles and track titles. |
-| 12 | PDF filename | `const PDF_FILE` | one line | See below. |
+| 12 | Embedded PDF | `const PDF_B64` + `const PDF_NAME` | scripted | Regenerate from the final Doc. See below. |
 
 ---
 
 ## The Download PDF button
 
-The button does **not** print the HTML. It serves the PDF export of the final Google Doc,
-which lives next to `index.html` in the repo.
+The button does **not** print the HTML. It serves the PDF export of the **final Google Doc**,
+embedded directly in `index.html` as base64. This is the standard for all IMA HTML
+deliverables — the file is self-contained and has no external dependency.
 
 ```js
-const PDF_FILE = 'BFC_Impact_Measurement_Roadmap_May2026.pdf';
+const PDF_NAME = 'BFC_Impact_Measurement_Roadmap_May2026.pdf';
+const PDF_B64  = "JVBERi0xLjQ...";   // the whole PDF, one line
 ```
 
-Per client, change that one line to match the committed PDF's filename. The function does a
-`HEAD` check first: if the file is present it downloads it; if not (e.g. the report hasn't
-been exported yet, or you're viewing a bundled single file) it falls back to the browser
-print dialog so the button never dead-ends.
+`downloadPDF()` decodes `PDF_B64` with `atob`, builds a `Uint8Array` → `Blob`, and triggers an
+`<a download>` click.
 
-**Commit the PDF.** If you forget, the button silently degrades to print-to-PDF of the HTML,
-which is not the deliverable.
+**Regenerating it per client** (scripted — never paste base64 by hand):
+
+1. Export the final Doc: Drive `download_file_content` with `exportMimeType: application/pdf`.
+   The response is base64 already. Large responses are written to a tool-results file that the
+   sandbox can read directly at `.claude/projects/.../tool-results/` — decode from there so the
+   base64 never has to pass through a model context.
+2. `base64.b64encode(pdf_bytes)` → splice in as the `PDF_B64` literal, replacing the old one.
+3. Update `PDF_NAME`.
+
+**Always verify the round-trip.** Extract `PDF_B64` back out of the written file, decode it, and
+assert the bytes are identical to the source PDF (compare SHA-256) and that it still parses at
+the expected page count. A corrupted embed produces a button that downloads a broken file — it
+will not announce itself.
+
+**Expected size.** The embed adds roughly 4/3 the PDF's size, so `index.html` lands in the
+hundreds of KB to low MB (BFC: 869KB for a 580KB, 9-page PDF). That is normal, not a mistake.
+
+**The embed is a snapshot.** If the Doc changes, re-export and re-embed — the HTML will not
+update itself.
 
 ---
 
@@ -194,7 +213,7 @@ content swap. Do it deliberately and eyeball the result.
   `hidePriorityPopup()`, `toggleFullscreen()`, `openAboutModal()` (+ its close handler),
   `downloadPDF()`, the scroll-spy `IntersectionObserver` + `navMap`, and the sticky-TOC
   `--toc-pin` logic. You edit the JS **data** — `nodes`, `priorityData`, `navMap` keys, and
-  the `PDF_FILE` string — never the function bodies.
+  the `PDF_B64` / `PDF_NAME` values — never the function bodies.
 - SVG **geometry**: `<rect>`/`<line>`/`<marker>`/`<defs>` coordinates, arrowheads, filters,
   the dim-overlays and connector lines. Only the `<text>` *words* and the confidence
   fill/stroke are content.
@@ -225,8 +244,9 @@ content swap. Do it deliberately and eyeball the result.
       `Ilana Nankin`, `Michael Fenchel`, `Samuel Levine`, `William Jewell`, `Yoga Ed`,
       `Human Intelligence`, `M.S.Ed.`, `capstone`, `Perceived Stress Scale`.
 - [ ] "Cobalt Collective" author identity intact (cover topbar logo, About modal, footer).
-- [ ] `PDF_FILE` updated **and** the matching PDF committed next to `index.html`.
-      Click the button and confirm it downloads the Doc PDF, not a print dialog.
+- [ ] `PDF_B64` regenerated from **this client's** final Doc, and `PDF_NAME` updated.
+      Verified by round-trip: extracted, decoded, SHA-256 matches the source PDF.
+      Then click the button in a browser and confirm the downloaded file opens correctly.
 - [ ] Open in a browser: every model-diagram box click opens a drawer with matching content.
 - [ ] Toggle "Show measurement priorities": badges appear; hovering a badge highlights its
       connector lines and dims the other nodes; clicking opens the right priority drawer.
