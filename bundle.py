@@ -13,11 +13,14 @@ Usage:
 
 Run it from the repo root. It does not modify index.html or styles.css.
 
-NOTE ON THE PDF BUTTON: the "Download PDF" button serves a sibling PDF file
-(see PDF_FILE in index.html) that lives next to index.html in the repo. A
-bundled single file has no repo beside it, so the button will not find the PDF
-and falls back to the browser print dialog. If you are emailing the bundle,
-attach the PDF separately.
+NOTE ON THE PDF BUTTON: the "Download PDF" button does NOT fetch a sibling file.
+The PDF export of the final Google Doc is embedded in index.html as base64
+(PDF_B64 / PDF_NAME), so it survives bundling intact and needs nothing attached.
+This docstring previously described an older sibling-file convention.
+
+NOTE ON SIZE: the bundle carries both the embedded PDF (in index.html) and the
+cover banner (a data URI in styles.css), so a bundled file in the 1-2 MB range
+is expected, not a mistake.
 """
 import re
 import sys
