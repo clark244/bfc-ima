@@ -206,6 +206,18 @@ content swap. Do it deliberately and eyeball the result.
 
 ## Do NOT touch (chrome — identical for every client)
 
+**The cover banner is chrome.** `#cover` in `styles.css` carries the standard Cobalt
+artwork as a base64 JPEG data URI, layered under a dark scrim gradient. It is identical
+for every client — there is no per-client image slot, and no third file to upload.
+
+- Do not swap the image, and do not lighten the scrim's first two stops. The scrim is what
+  keeps the left side dark enough for the white client name and meta grid; the artwork is
+  light on its right side and the cover type will fail against it without the scrim.
+- `background-color: var(--ink)` above it is the fallback. Leave it — if the data URI is
+  ever corrupted the cover degrades to dark navy with legible type instead of white on white.
+- It prints. `-webkit-print-color-adjust: exact` is already set on `#cover`.
+- It survives `bundle.py`, because it lives in the CSS the bundler inlines.
+
 - The entire `styles.css` file (all CSS, including `--measure` and the layout variables).
   If a client genuinely needs a new component, add a rule to `styles.css` and treat it as a
   template improvement — don't inline styles into one client's HTML.
