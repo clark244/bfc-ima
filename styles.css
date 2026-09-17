@@ -794,6 +794,14 @@ nav { padding: 8px 0; }
   margin-bottom: 8px;
   max-width: 100%;
 }
+/* Scoping paragraph — the sole paragraph of the About-the-client section, which sits
+   between Key Findings and the model. It needs no decoration of its own: the section
+   header and rule already mark it. Its job is to let the client verify in five seconds
+   that the report describes what they actually built. */
+.scope-note {
+  max-width: var(--measure);
+}
+
 .priority-card-body p.italic {
   font-style: italic;
   color: var(--muted);

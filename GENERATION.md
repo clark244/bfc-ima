@@ -119,6 +119,7 @@ in doubt, cut toward the low end — this is an executive brief.
 | 1 | Cover + meta | `cover-label`, `cover-client`, `cover-meta-value` | labels only | Client name, doc type, "prepared for" contacts, date. **"Cobalt Collective" is the report author — constant, do not change.** |
 | 2 | Key Findings (4 cards) | `class="kf-card"` | title **8–14**, desc **20–28** (≈**100** total desc) | The executive summary. Keep the four descriptions balanced so the cards align. |
 | 3 | About modal | `id="about-modal"` | intro **60–90** | Mostly boilerplate; swap client name, source dates, discovery-conversation reference, and the `.about-sources` list. |
+| 3b | **About-the-client section** | `id="about-client"` | **60–90** | A short unnumbered section between Key Findings and the model. See "The About-the-client section" below. |
 | 4 | Process model prose | `id="model"` intro `<p>` | **55–85** | Narrative framing of the diagram. |
 | 5 | **The diagram** | `id="model-svg"` + the `nodes` object | box labels **2–5 words each**; each node `know`/`gaps` **30–60** | **The hardest region. See "The diagram trap" below.** |
 | 6 | Evidence Landscape | `id="evidence-table"` + closing `<p>` | **6 rows**; closing para **80–110** | Rows = the client's existing evidence assets. Keep cell copy terse. |
@@ -128,6 +129,51 @@ in doubt, cut toward the low end — this is an executive brief.
 | 10 | Next Steps | `next-steps-list` | **6–7 steps, 25–45 each** | |
 | 11 | Nav labels | `<nav>` in `id="sidebar"` | labels only | Must **mirror** the section titles and track titles. |
 | 12 | Embedded PDF | `const PDF_B64` + `const PDF_NAME` | scripted | Regenerate from the final Doc. See below. |
+
+---
+
+## The About-the-client section (region 3b)
+
+A short unnumbered section titled "About [Client]", sitting between Key Findings and the
+Impact Process Model. One paragraph, no subheadings. It carries a section header, a section
+rule, a sidebar nav entry and a `navMap` entry like any other section — it is simply much
+shorter than the rest.
+
+```html
+<section class="section" id="about-client">
+  <div class="section-header"><h2 class="section-title">About [Client]</h2></div>
+  <div class="section-rule"></div>
+  <p class="scope-note">…</p>
+</section>
+```
+
+It mirrors the Word report, where this is a Heading 1 section in the same position, before
+"About This Report". Keep the two in step: About the *client* comes before About the
+*report*, because the reader should know what is being assessed before how it was assessed.
+
+**Its job is an accuracy check, not context.** The client reads it in five seconds and
+confirms the report describes what they actually built. A founder who has to correct it has
+found the error on page one instead of page six, which is the point. Write it so it is easy
+to disagree with.
+
+**What it contains:** what the organization offers, who uses it, who buys it, and the
+boundary — what this assessment covers and what it treats as out of scope. Acquisitions,
+adjacent product lines and discontinued products belong in that last clause when they exist,
+because a reader who knows the company will otherwise wonder whether they were missed.
+
+**What it does not contain:**
+
+- **Anything already in the figure's implementation-context box.** Credits, price, duration,
+  accreditation, delivery mode, administration time — the box carries those. Restating them
+  spends the paragraph's whole budget on nothing. Check the box before writing.
+- **Analysis.** It states what the thing is. Key Findings said what we concluded, and the
+  model does the causal work. This section makes no claim beyond description and scope.
+- **Marketing language.** If it reads like the client's homepage, it is doing their writing
+  rather than Cobalt's.
+
+**The test:** could this have been written from the client's website alone? If yes, it is
+either mis-scoped, or the discovery conversation never reached what the product actually is —
+and the second case is worth knowing before the model is drawn.
 
 ---
 
@@ -269,5 +315,8 @@ for every client — there is no per-client image slot, and no third file to upl
 - [ ] About modal opens and closes from both cover buttons (topbar and the narrow-screen one).
 - [ ] Print/PDF preview looks right (the print-only Model Description renders; TOC and topbar
       are hidden; priority card bodies are expanded).
+- [ ] The About-the-client section names the client, the user, the buyer and the scope
+      boundary, repeats nothing from the figure's implementation-context box, and has both
+      a nav link and a `navMap` entry.
 - [ ] Prose still respects the `--measure` width — no paragraph runs the full page width.
 - [ ] Responsive: below ~860px the TOC hides and the About button moves under the cover meta.
