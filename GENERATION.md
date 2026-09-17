@@ -138,7 +138,7 @@ embedded directly in `index.html` as base64. This is the standard for all IMA HT
 deliverables — the file is self-contained and has no external dependency.
 
 ```js
-const PDF_NAME = 'BFC_Impact_Measurement_Roadmap_May2026.pdf';
+const PDF_NAME = 'BFC_Impact_Measurement_Assessment_May2026.pdf';
 const PDF_B64  = "JVBERi0xLjQ...";   // the whole PDF, one line
 ```
 
