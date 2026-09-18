@@ -126,6 +126,7 @@ in doubt, cut toward the low end — this is an executive brief.
 | 7 | Opportunities framing | `id="opportunities"` intro `<p>`s | **3 paras, ≈200 total** (buyer-reality para **80–90**) | Includes the two-track framing. |
 | 8 | Matrix column labels | `priority-matrix-key` | labels only | The four audience/buyer columns. Must match the `.pm-dots` order in every card. |
 | 9 | Priority cards | `class="priority-card"` | body **170–230** (intro **90–140** + a 4-item list + one italic note **25–40**) | The detailed payload. BFC has 6 (1a–1d, 2a–2b). |
+| 9b | **What Changes If You Do This** | `id="whatchanges"` | **90–130** | One paragraph, after the priorities, before Next Steps. See the section below. |
 | 10 | Next Steps | `next-steps-list` | **6–7 steps, 25–45 each** | |
 | 11 | Nav labels | `<nav>` in `id="sidebar"` | labels only | Must **mirror** the section titles and track titles. |
 | 12 | Embedded PDF | `const PDF_B64` + `const PDF_NAME` | scripted | Regenerate from the final Doc. See below. |
@@ -174,6 +175,52 @@ because a reader who knows the company will otherwise wonder whether they were m
 **The test:** could this have been written from the client's website alone? If yes, it is
 either mis-scoped, or the discovery conversation never reached what the product actually is —
 and the second case is worth knowing before the model is drawn.
+
+---
+
+## "What Changes If You Do This" (region 9b)
+
+An unnumbered section of a single paragraph, placed after the last track of priorities and
+before Recommended Next Steps. Structured like any other section — header, rule, nav entry,
+`navMap` entry — with no new CSS.
+
+```html
+<section class="section" id="whatchanges">
+  <div class="section-header"><h2 class="section-title">What Changes If You Do This</h2></div>
+  <div class="section-rule"></div>
+  <p>…</p>
+</section>
+```
+
+**What it is.** The payoff: what these priorities, taken together, let this client do that they
+cannot do today. It is a synthesis across the whole set, which is the one thing the individual
+priority cards structurally cannot say.
+
+**What it is not.** It is not a paragraph about the value of impact measurement. A sentence
+that would read the same for every client is marketing, and it belongs in a Cobalt deck, not
+in a client's report. If you could paste it into the next IMA by swapping the company name, it
+has failed.
+
+**Do not hedge here.** Design cautions, instrument limitations and threats to validity live in
+the priority cards, next to the design decisions that address them. Repeating them in this
+section makes the payoff hedge its own payoff, which is the fastest way to have a client
+discount the whole document. Say what becomes possible; the cards have already said at what
+cost.
+
+**Position matters.** After the priorities, not before. Before them, the reader does not yet
+know what is being proposed, so any claim about consequences is unanchored. After them, it
+reads as the conclusion and hands off cleanly into Next Steps.
+
+### The check this section replaces
+
+An earlier design attached a "what it lets you decide" line to every priority card. That was
+dropped because it made the cards long, but it was doing a second job worth keeping: a
+priority whose decision line comes out vague is usually a priority that has not earned its
+slot. **Apply that test while drafting, card by card, even though it no longer appears in the
+document.** For each priority, name the branch the client currently cannot resolve and the
+options on either side of it. If you cannot, reconsider whether the priority is real or
+whether it is a sub-step promoted to fill out a list. The IMA rule that priority count falls
+out of the evidence has no other enforcement mechanism now.
 
 ---
 
@@ -326,5 +373,8 @@ for every client — there is no per-client image slot, and no third file to upl
 - [ ] The About-the-client section names the client, the user, the buyer and the scope
       boundary, repeats nothing from the figure's implementation-context box, and has both
       a nav link and a `navMap` entry.
+- [ ] "What Changes If You Do This" is specific to this client — swapping the company name
+      into the next report would produce nonsense, not a usable paragraph — carries no hedges,
+      and has a nav link and a `navMap` entry.
 - [ ] Prose still respects the `--measure` width — no paragraph runs the full page width.
 - [ ] Responsive: below ~860px the TOC hides and the About button moves under the cover meta.
