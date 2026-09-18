@@ -633,7 +633,16 @@ nav { padding: 8px 0; }
 .m-dot-full { color: var(--cobalt); font-size: var(--text-base); }
 .m-dot-open { color: #c0cce0; font-size: var(--text-base); }
 .m-dot-none { color: #dde4ee; font-size: var(--text-sm); }
-.matrix-legend { font-size: var(--text-sm); color: var(--muted); margin-bottom: 14px; }
+/* Dot legend. Belongs immediately under the matrix key row it explains — it used to sit
+   at the end of the previous section, stranded from the dots it describes. In the Word
+   report the same legend sits under the at-a-glance table; the HTML has no such table,
+   which is how it came loose. One per track, since each track carries its own key row. */
+.matrix-legend {
+  font-size: var(--text-xs);
+  color: var(--muted);
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--rule);
+}
 
 /* ── SUBSECTION HEADER ──────────────────────────────────── */
 .sub-header {

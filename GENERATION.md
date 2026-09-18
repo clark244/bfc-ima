@@ -291,6 +291,12 @@ for every client — there is no per-client image slot, and no third file to upl
   copy of the key row as the first child of its `.priority-cards.priority-matrix` container.
 - **Badges ↔ cards ↔ priorityData:** the badge `data-priority`, the card `id="card-<x>"`, and
   the `priorityData` key are the same identifier. All three must agree.
+- **Legend ↔ key row:** the `.matrix-legend` line explaining ●/○/– belongs immediately
+  after the `.priority-matrix-key` block, inside the same `.priority-cards.priority-matrix`
+  container — one per track. It does **not** belong at the end of the Measurement
+  Opportunities section; that is where it lands if you carry the Word report's structure
+  over verbatim, because there it sits under the at-a-glance table, which the HTML has no
+  equivalent of.
 - **Track counts:** nav badge number = cards in that track = badges in the figure for that
   track.
 
@@ -310,6 +316,8 @@ for every client — there is no per-client image slot, and no third file to upl
       connector lines and dims the other nodes; clicking opens the right priority drawer.
 - [ ] Full-screen button on the figure expands and collapses.
 - [ ] All priority cards expand/collapse; the dot columns line up under the key row.
+- [ ] The ●/○/– legend sits directly under each track's key row, not at the end of the
+      previous section.
 - [ ] Scroll top→bottom: the sticky TOC active state tracks the visible section, including
       the track sub-items.
 - [ ] About modal opens and closes from both cover buttons (topbar and the narrow-screen one).
